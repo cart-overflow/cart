@@ -1,0 +1,44 @@
+name: Build and Push Docker
+
+run-name: Build and Push Docker
+
+on:
+  workflow_dispatch:
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: user
+  ORGANIZATION: cart-overflow
+
+jobs:
+  build-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Generate version
+        id: version
+        run: |
+          VERSION=$(go list -m -f {{.GoVersion}})
+          BUILD_NUMBER=${{ github.run_number }}
+          FULL_VERSION="${VERSION}-${BUILD_NUMBER}"
+          echo "full_version=${FULL_VERSION}" >> $GITHUB_OUTPUT
+          echo "Generated version: ${FULL_VERSION}"
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ env.ORGANIZATION }}/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.full_version }}

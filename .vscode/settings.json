@@ -1,0 +1,10 @@
+{
+  "explorer.sortOrder": "type",
+  "explorer.sortOrderLexicographicOptions": "upper",
+  "go.lintOnSave": "workspace",
+  "go.lintTool": "golangci-lint",
+  "go.formatTool": "custom",
+  "go.alternateTools": {
+    "customFormatter": "${workspaceFolder}/scripts/format-stdin.sh"
+  }
+}

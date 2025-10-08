@@ -1,0 +1,12 @@
+pre-push:
+  piped: true
+  assert_lefthook_installed: true
+
+  jobs:
+    - name: Lint 
+      run: make lint
+    
+commit-msg:
+  jobs:
+    - name: Commit message check
+      run: ./scripts/commit-message-check.sh {0}
