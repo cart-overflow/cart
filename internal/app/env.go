@@ -1,5 +1,6 @@
 package app
 
 const (
-	AddrKey = "ADDR"
+	AddrKey       = "ADDR"
+	ValkeyAddrKey = "VALKEY_ADDR"
 )
